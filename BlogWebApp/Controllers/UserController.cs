@@ -15,11 +15,11 @@ namespace BlogWebApp.Controllers
             this.usersService = usersService;
         }
 
-        public IActionResult Index() => this.View();
+        public IActionResult Register() => this.View();
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Index(RegisterUserViewModel model)
+        public IActionResult Register(RegisterUserViewModel model)
         {
             if (!ModelState.IsValid)
             {
