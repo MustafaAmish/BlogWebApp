@@ -38,13 +38,11 @@ namespace Blog.Services
 
         public async Task<bool> Register( string email, string password, string confirmPassword, string firstName, string lastName)
         {
-            if (
-                email == null ||
+            if (email == null ||
                 password == null ||
                 confirmPassword == null ||
                 firstName == null ||
                 lastName == null ||
-                
                 password != confirmPassword)
             {
                 return false;
@@ -52,12 +50,10 @@ namespace Blog.Services
 
             var user = new User
             {
-               Email = email,
+                Email = email,
                 FistName = firstName,
                 LastName = lastName,
-                UserName = firstName
-                
-               
+                UserName = email
             };
 
             var result = await this.userManager.CreateAsync(user, password);
