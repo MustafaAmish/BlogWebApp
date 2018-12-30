@@ -43,6 +43,9 @@
 </div>
 <div>
     <a asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">Comment</a> |
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    }|
     <a asp-action="Index">Back to List</a>
 </div>
