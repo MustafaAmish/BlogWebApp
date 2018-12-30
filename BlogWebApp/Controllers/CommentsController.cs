@@ -24,6 +24,10 @@ namespace BlogWebApp.Controllers
 
         public IActionResult Create()   
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "User");
+            }
             return View();
         }
 
