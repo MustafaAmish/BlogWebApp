@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Blog.Data;
 using Blog.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace BlogWebApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,13 +22,14 @@ namespace BlogWebApp.Controllers
             _context = context;
         }
 
-        // GET: Posts
+        [Authorize()]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Posts.ToListAsync());
         }
 
         // GET: Posts/Details/5
+        [Authorize()]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -86,6 +90,7 @@ namespace BlogWebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+  
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Genre")] Post post)
         {
             if (id != post.Id)
