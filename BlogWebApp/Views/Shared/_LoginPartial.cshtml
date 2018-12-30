@@ -23,7 +23,7 @@
     else
     {
         <li class="nav-item">
-            <a class="nav-link nav-link-dark">Hello @User.Identity.Name!</a>
+            <a class="nav-link nav-link-dark">Hello @SignInManager.UserManager.Users.Select(x=>x.FistName).First()!</a>
         </li>
 
     }
