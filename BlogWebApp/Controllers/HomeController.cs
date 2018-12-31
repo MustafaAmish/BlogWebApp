@@ -25,7 +25,7 @@ namespace BlogWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(string sort)
         {
-            if (sort!="All")
+            if (sort!="all")
             {
                 return View(await _context.Posts.Where(x => x.Genre.ToString() == sort).ToListAsync());
             }
