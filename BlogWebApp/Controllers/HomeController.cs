@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,15 @@ namespace BlogWebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
+            return View(await _context.Posts.ToListAsync());
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(string sort)
+        {
+            if (sort!="All")
+            {
+                return View(await _context.Posts.Where(x => x.Genre.ToString() == sort).ToListAsync());
+            }
             return View(await _context.Posts.ToListAsync());
         }
         [Authorize(Roles = "Admin")]
