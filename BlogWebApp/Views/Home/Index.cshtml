@@ -2,38 +2,44 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    var mod = Model;
     
 }
 
-<form asp-action="Index" >
-    <select name="sort">
-        <option value="all">All</option>
-        <option value="IT">IT</option>
-        <option value="Movies">Movies</option>
-        <option value="Jokes">Jokes</option>
-        <option value="Other">Other</option>
+<form asp-action="Index">
+    <select id="sort" onchange="getComboA(this)">
+        <option value="all" selected='@(ViewData["Genre"].ToString() == "all" ? "selected" : null)'>All</option>
+        <option value="IT" selected='@(ViewData["Genre"].ToString() == "IT" ? "selected" : null)'>IT</option>
+        <option value="Movies" selected='@(ViewData["Genre"].ToString() == "Movies" ? "selected" : null)'>Movies</option>
+        <option value="Jokes" selected='@(ViewData["Genre"].ToString() == "Jokes" ? "selected" : null)'>Jokes</option>
+        <option value="Other" selected='@(ViewData["Genre"].ToString() == "Other" ? "selected" : null)'>Other</option>
     </select>
-    <input type="submit">
+    @*<input type="submit">*@
 </form>
 
 
-<ul  style="list-style-type:none">
-    @foreach (var post in Model)
-    {
-        <div  class="form-row d-flex justify-content-between my-3">
-            <div class="form-group col-md-12 d-flex flex-column align-items-center">
-                <h3>@post.Title</h3>
-                <li title="">@post.Description</li>
-                <td>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
-                    }
-                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">Details</a> 
 
-                </td>
+    <ul style="list-style-type:none">
+        @foreach (var post in mod)
+        {
+            <div class="form-row d-flex justify-content-between my-3">
+                <div class="form-group col-md-12 d-flex flex-column align-items-center">
+                    <h3>@post.Title</h3>
+                    <li title="">@post.Description</li>
+                    <td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
+                        }
+                        <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">Details</a>
+
+                    </td>
+                </div>
             </div>
-        </div>
 
-    }
-</ul>
+        }
+    </ul>
+
+
+
+

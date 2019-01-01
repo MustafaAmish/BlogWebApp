@@ -1,4 +1,5 @@
-﻿using BlogWebApp.Models;
+﻿using System;
+using BlogWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -17,20 +18,26 @@ namespace BlogWebApp.Controllers
         {
             _context = context;
         }
-
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string data)
         {
-            return View(await _context.Posts.ToListAsync());
-        }
-        [HttpPost]
-        public async Task<IActionResult> Index(string sort)
-        {
-            if (sort!="all")
+            ViewData["Genre"] = "all";
+            if (data != "all" && data != null)
             {
-                return View(await _context.Posts.Where(x => x.Genre.ToString() == sort).ToListAsync());
+                ViewData["Genre"] = data;
+                return View(await _context.Posts.Where(x => x.Genre.ToString() == data).ToListAsync());
             }
             return View(await _context.Posts.ToListAsync());
         }
+        //[HttpPost]
+        //public async Task<IActionResult> Index(string id)
+        //{
+        //    if (id != "all")
+        //    {
+        //        return View(await _context.Posts.Where(x => x.Genre.ToString() == id).ToListAsync());
+        //    }
+        //    return View(await _context.Posts.ToListAsync());
+        //}
         [Authorize(Roles = "Admin")]
         public IActionResult About()
         {
