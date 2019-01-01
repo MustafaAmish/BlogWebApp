@@ -20,3 +20,7 @@ function getComboA(selectObject) {
 
     window.location.href = "/?data=" + value;
 }
+function myFunction() {
+    var x = location.href;
+    document.getElementById("demo").innerHTML = x;
+}

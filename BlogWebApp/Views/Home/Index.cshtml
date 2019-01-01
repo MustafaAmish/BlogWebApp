@@ -3,9 +3,11 @@
 @{
     ViewData["Title"] = "Home Page";
     var mod = Model;
-    
-}
 
+}
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
 <form asp-action="Index">
     <select id="sort" onchange="getComboA(this)">
         <option value="all" selected='@(ViewData["Genre"].ToString() == "all" ? "selected" : null)'>All</option>
@@ -19,26 +21,26 @@
 
 
 
-    <ul style="list-style-type:none">
-        @foreach (var post in mod)
-        {
-            <div class="form-row d-flex justify-content-between my-3">
-                <div class="form-group col-md-12 d-flex flex-column align-items-center">
-                    <h3>@post.Title</h3>
-                    <li title="">@post.Description</li>
-                    <td>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
-                        }
-                        <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">Details</a>
+<ul style="list-style-type:none">
+    @foreach (var post in mod)
+    {
+        <div class="form-row d-flex justify-content-between my-3">
+            <div class="form-group col-md-12 d-flex flex-column align-items-center">
+                <h3>@post.Title</h3>
+                <li title="">@post.Description</li>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
+                    }
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">Details</a>
 
-                    </td>
-                </div>
+                </td>
             </div>
+        </div>
 
-        }
-    </ul>
+    }
+</ul>
 
 
 
