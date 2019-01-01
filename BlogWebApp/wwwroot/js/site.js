@@ -4,22 +4,12 @@
 // Write your JavaScript code.
 
 
-function getComboA(selectObject) {
-    var value = selectObject.value;
-    //var pp = {"data":value}
-    //$.ajax({
-    //    type: "Get",
-    //    url: "/",
-    //    data: pp,
-    //    datatype: "html",
-    //    success: function() {
-    //        console.log('Success');
+//function getComboA(selectObject) {
+//    var value = selectObject.value;
+ 
 
-    //    }
-    //});
-
-    window.location.href = "/?data=" + value;
-}
+//    window.location.href = "/?data=" + value;
+//}
 function myFunction() {
     var x = location.href;
     document.getElementById("demo").innerHTML = x;
