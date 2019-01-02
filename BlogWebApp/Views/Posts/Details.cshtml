@@ -8,50 +8,7 @@
 <script src="https://apis.google.com/js/plusone.js">
 </script>
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-@*<div>
-    <h4>Post</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Genre)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Genre)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Comments)
-        </dt>
-        @foreach (var mm in Model.Comments)
-        {
 
-            <dd>
-                @mm.User.FistName;=>@mm.Content
-            </dd>
-        }
-
-    </dl>
-</div>
-<div>
-    <a asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id">Comment</a> |
-    @if (User.IsInRole("Admin"))
-    {
-        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        <a asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-    }|
-    <button class="label label-default" onclick="window.history.back()">Back</button>
-</div>*@
 
 <div class="container">
     <div class="row">
@@ -88,13 +45,13 @@
                         <p>@comment.Content</p>
                     }
 
-                    <div class="well">
+                    <div class="well" style="border-radius: 32px; width: 60%; padding: 11px;">
                         <h4><i class="fa fa-paper-plane-o"></i> Leave a Comment:</h4>
                         <form asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id" role="form" method="post">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group">
                                
-                                <textarea name="comment" id="comment" asp class="form-control"  rows="3"></textarea>
+                                <textarea name="comment" id="comment" asp class="form-control"  rows="1"></textarea>
                             </div>
                             <button  value="Create" type="submit" class="btn btn-primary"><i class="fa fa-reply"></i> Submit</button>
                         </form>

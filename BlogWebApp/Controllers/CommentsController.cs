@@ -40,7 +40,7 @@ namespace BlogWebApp.Controllers
             }
             var mm = new Comment()
             {
-                //Content = comment,
+                Content = comment,
                 User =await this.userManager.FindByNameAsync(this.User.Identity.Name),
                 Post = this._context.Posts.First(x=>x.Id==id)
             };
