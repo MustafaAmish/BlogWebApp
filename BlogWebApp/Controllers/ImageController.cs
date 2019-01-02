@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BlogWebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogWebApp.Controllers
@@ -32,12 +33,13 @@ namespace BlogWebApp.Controllers
             var img = _context.Images.FirstOrDefaultAsync(x => x.Id == id);
             return View(await img);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Image image, List<IFormFile> Img)
         {
             foreach (var imgFile in Img)
