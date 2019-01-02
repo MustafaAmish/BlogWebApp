@@ -24,11 +24,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="Img" class="control-label"></label>
-                <input type="file" id="files" asp-for="Img"  />
+                <input type="file" id="files" asp-for="Img" required />
                 <span asp-validation-for="Img" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Upload" class="btn btn-default" />
             </div>
         </form>
     </div>
