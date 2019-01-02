@@ -46,7 +46,7 @@ namespace BlogWebApp.Controllers
             };
             this._context.Comments.Add(mm);
             this._context.SaveChanges();
-            return Redirect("/");
+            return Redirect("/Posts/Details/"+id);
         }
     }
 }
