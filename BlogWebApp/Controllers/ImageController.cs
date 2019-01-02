@@ -56,7 +56,7 @@ namespace BlogWebApp.Controllers
 
             _context.Images.Add(image);
             _context.SaveChanges();
-            return View();
+            return RedirectToAction("Gallery");
         }
 
         public ActionResult Index(string imageName)
