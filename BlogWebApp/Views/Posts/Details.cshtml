@@ -1,12 +1,14 @@
-﻿@model Blog.Models.Post
+﻿
+@model Blog.Models.Post
 
 @{
     ViewData["Title"] = "Details";
 }
-
-<h2>Details</h2>
-
-<div>
+@*<h2>Details</h2>*@
+<script src="https://apis.google.com/js/plusone.js">
+</script>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+@*<div>
     <h4>Post</h4>
     <hr />
     <dl class="dl-horizontal">
@@ -49,4 +51,72 @@
         <a asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
     }|
     <button class="label label-default" onclick="window.history.back()">Back</button>
+</div>*@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-7">
+            <div id="postlist">
+                <div class="panel">
+
+                    <div class="panel-heading">
+                        <div class="text-center">
+                            <div class="row">
+
+                                <div class="col-sm-9">
+                                    <h3 align="center" class="pull-left">@Model.Title</h3>
+                                </div>
+                                @**<div class="col-sm-3">
+                                        @*<h4 class="pull-right">
+                                            <small><em>@post.CreatedOn.Date.ToShortDateString()<br>18:30:00</em></small>
+                                        </h4>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        @Model.Description
+                    </div>
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <h3>
+                            <i class="fa fa-comment"></i> @comment.User.FistName:
+                            <small> 9:41 PM on August 24, 2014</small>
+                        </h3>
+                        <p>@comment.Content</p>
+                    }
+
+                    <div class="well">
+                        <h4><i class="fa fa-paper-plane-o"></i> Leave a Comment:</h4>
+                        <form asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id" role="form" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                               
+                                <textarea name="comment" id="comment" asp class="form-control"  rows="3"></textarea>
+                            </div>
+                            <button  value="Create" type="submit" class="btn btn-primary"><i class="fa fa-reply"></i> Submit</button>
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+
+                       
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                            <a asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                        }
+                        |
+                        <button class="label label-default" onclick="window.history.back()">Back</button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

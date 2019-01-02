@@ -32,11 +32,15 @@ namespace BlogWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(int id,CommetDto modelCommetDto)
+        public async Task<IActionResult> Create(int id, string comment)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "User");
+            }
             var mm = new Comment()
             {
-                Content = modelCommetDto.Content,
+                //Content = comment,
                 User =await this.userManager.FindByNameAsync(this.User.Identity.Name),
                 Post = this._context.Posts.First(x=>x.Id==id)
             };
