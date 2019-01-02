@@ -87,10 +87,15 @@ namespace BlogWebApp
             app.UseAuthentication();
 
             app.UseMvc(routes =>
-            {
+            { 
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "imgRoute",
+                    template: "image/{imageName}",
+                    defaults: new {controller = "Image", action = "Index"});
             });
         }
     }

@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<Blog.Models.Post>
 
+
 @{
     ViewData["Title"] = "Home Page";
     var mod = Model;
 
 }
-<button onclick="myFunction()">Try it</button>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
 
-<p id="demo"></p>
+<h4 align="center">Sort by category 
 <form asp-action="Index">
     <select id="sort" onchange="getComboA(this)">
         <option value="all" selected='@(ViewData["Genre"].ToString() == "all" ? "selected" : null)'>All</option>
@@ -19,36 +21,64 @@
     @*<input type="submit">*@
 </form>
 
+</h4>
 
 
-<ul style="list-style-type:none">
-    @foreach (var post in mod)
-    {
-        <div class="form-row d-flex justify-content-between my-3">
-            <div class="form-group col-md-12 d-flex flex-column align-items-center">
-                <h3>@post.Title</h3>
-                <li title="">@post.Description</li>
-                <td>
-                    @if (User.IsInRole("Admin"))
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-7">
+            <div id="postlist">
+                <div class="panel">
+                    @foreach (var post in mod)
                     {
-                        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
-                    }
-                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">Details</a>
+                        <div class="panel-heading">
+                            <div class="text-center">
+                                <div class="row">
 
-                </td>
+                                    <div class="col-sm-9">
+                                        <h3 class="pull-left">@post.Title</h3>
+                                    </div>
+                                    @**<div class="col-sm-3">
+                                        @*<h4 class="pull-right">
+                                            <small><em>@post.CreatedOn.Date.ToShortDateString()<br>18:30:00</em></small>
+                                        </h4>
+                                    </div>*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            @post.Description
+                        </div>
+                        <div class="panel-footer">
+                            
+                            <td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="label label-default" asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id" >Edit</a>
+                                }
+                                <a class="label label-default" asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">Details</a>
+
+                            </td>
+                        </div>
+                        
+                    }
+                </div>
             </div>
         </div>
+    </div>
+</div>
 
-    }
-</ul>
 
 
 <script>
     function getComboA(selectObject) {
-    var value = selectObject.value;
- 
+        var value = selectObject.value;
 
-    window.location.href = "/?data=" + value;
-}
+
+        window.location.href = "/?data=" + value;
+    }
+
 </script>
 

@@ -1,0 +1,33 @@
+﻿@using System.Collections
+@model IEnumerable<Blog.Models.Image>
+
+@{
+    ViewData["Title"] = "Gallery";
+}
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<h2>Gallery</h2>
+
+<div>
+    <h4>Image</h4>
+    <hr />
+
+
+    <div class="container">
+        <div class="row">
+            @foreach (var md in Model)
+            {
+                <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                    <a class="thumbnail" asp-action="Details" asp-route-id="@md.Id">
+                        <img class="img-thumbnail" src="/Image/@md.Name">
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+<div class="panel-footer">
+
+    <button class="label label-default" onclick="window.history.back()" >Go Back</button>
+</div>
