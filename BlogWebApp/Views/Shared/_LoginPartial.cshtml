@@ -6,44 +6,47 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-<ul class="nav navbar-nav navbar-right">
-    @if (User.IsInRole("Admin"))
-    {
-        <li class="nav-item">
-            <a class="nav-link nav-link-dark">Hello Admin!</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link nav-link-dark" asp-controller="Posts" asp-action="Index">All Post</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link nav-link-dark" asp-controller="Posts" asp-action="Create">Create</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link nav-link-dark" asp-controller="Image" asp-action="Create">Upload image</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link nav-link-dark" asp-controller="Books" asp-action="Create">Upload book</a>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link nav-link-dark">Hello @SignInManager.UserManager.Users.Where(x => x.Email == User.Identity.Name).Select(x => x.FistName).First()!</a>
-        </li>
+    <ul class="nav navbar-nav navbar-right">
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link nav-link-dark">Hello Admin!</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-dark" asp-controller="Posts" asp-action="Index">All Post</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-dark" asp-controller="Posts" asp-action="Create">Create</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-dark" asp-controller="Image" asp-action="Create">Upload image</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-dark" asp-controller="Books" asp-action="Create">Upload book</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link nav-link-dark">Hello @SignInManager.UserManager.Users.Where(x => x.Email == User.Identity.Name).Select(x => x.FistName).First()!</a>
+            </li>
 
 
-    }
-    <li class="nav-item">
-        <a class="nav-link nav-link-dark" asp-controller="User" asp-action="Logout">Logout</a>
-    </li>
-    >
-</ul>
+        }
+        <li class="nav-item">
+            <a class="nav-link nav-link-dark" asp-controller="User" asp-action="Logout">Logout</a>
+        </li>
+        >
+    </ul>
 }
 else
 {
-<ul class="nav navbar-nav navbar-right">
-    <li class="nav-item"><a class="nav-link nav-link-dark" asp-controller="User" asp-action="Register">Register</a></li>
-    <li class="nav-item"><a class="nav-link nav-link-dark" asp-controller="User" asp-action="Login">Login</a></li>
-</ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item"><a class="nav-link nav-link-dark" asp-controller="User" asp-action="Register">Register</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-dark" asp-controller="User" asp-action="Login">Login</a></li>
+    </ul>
 
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
