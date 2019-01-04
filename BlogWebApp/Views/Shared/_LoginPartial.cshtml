@@ -21,13 +21,16 @@
         <li class="nav-item">
             <a class="nav-link nav-link-dark" asp-controller="Image" asp-action="Create">Upload image</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link nav-link-dark" asp-controller="Books" asp-action="Create">Upload book</a>
+        </li>
     }
     else
     {
         <li class="nav-item">
             <a class="nav-link nav-link-dark">Hello @SignInManager.UserManager.Users.Where(x => x.Email == User.Identity.Name).Select(x => x.FistName).First()!</a>
         </li>
-        
+
 
     }
     <li class="nav-item">

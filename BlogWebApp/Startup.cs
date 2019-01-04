@@ -96,6 +96,10 @@ namespace BlogWebApp
                     name: "imgRoute",
                     template: "image/{imageName}",
                     defaults: new {controller = "Image", action = "Index"});
+                routes.MapRoute(
+                    name: "bookRoute",
+                    template: "books/{imageName}",
+                    defaults: new { controller = "Books", action = "Index" });
             });
         }
     }

@@ -25,6 +25,7 @@ namespace Blog.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<Book> Books { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

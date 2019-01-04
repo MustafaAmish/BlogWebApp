@@ -4,10 +4,10 @@
     ViewData["Title"] = "Details";
 }
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<h2>Details</h2>
+
 
 <div>
-    <h4>Image</h4>
+   
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -32,6 +32,11 @@
 </div>
 <div>
     @*<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |*@
+    @if (User.IsInRole("Admin"))
+    {
+        
+        <a asp-action="Delete" asp-route-id="@Model.Id" >Delete</a>
+    }
   
     <button class="label label-default" onclick="window.history.back()">Back to List</button>
 </div>

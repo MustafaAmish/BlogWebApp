@@ -1,0 +1,38 @@
+﻿@model Blog.Models.Book
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+        <dd>
+            <img class="img-thumbnail" src="/Books/@Model.Title"  />
+        </dd>
+    </dl>
+    <a href="@Model.Uri" target="_blank" type="button" class="gv-btn gv-btn-red">Buy Now</a>
+</div>
+<div>
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete
+        </a> |
+    <a asp-action="Index">Back to List</a>
+</div>

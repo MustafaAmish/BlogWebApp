@@ -38,14 +38,14 @@
                     </div>
                     @foreach (var comment in Model.Comments)
                     {
-                        <h3>
+                        <h5>
                             <i class="fa fa-comment"></i> @comment.User.FistName:
                             <small> 9:41 PM on August 24, 2014</small>
-                        </h3>
+                        </h5>
                         <p>@comment.Content</p>
                     }
 
-                    <div class="well" style="border-radius: 32px; width: 60%; padding: 11px;">
+                    <div class="well" >
                         <h4><i class="fa fa-paper-plane-o"></i> Leave a Comment:</h4>
                         <form asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Id" role="form" method="post">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

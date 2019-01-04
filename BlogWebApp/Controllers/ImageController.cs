@@ -15,11 +15,11 @@ namespace BlogWebApp.Controllers
     public class ImageController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly Image[] image;
+        private readonly Image[] _image;
         public ImageController(ApplicationDbContext context)
         {
             _context = context;
-            image = context.Images.ToArray();
+            _image = context.Images.ToArray();
         }
 
         public async Task<IActionResult> Gallery()
@@ -72,6 +72,37 @@ namespace BlogWebApp.Controllers
             }
 
             return null;
+        }
+
+      
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var images = await _context.Images
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (_image == null)
+            {
+                return NotFound();
+            }
+
+            return View(images);
+        }
+
+        // POST: Books/Delete/5
+        [HttpPost]
+     
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
+        {
+            var images = await _context.Images.FindAsync(id);
+            _context.Images.Remove(images);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Gallery));
         }
     }
 }
