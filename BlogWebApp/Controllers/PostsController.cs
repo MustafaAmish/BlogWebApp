@@ -1,10 +1,14 @@
-﻿using Blog.Data;
+﻿using System;
+using System.Collections.Generic;
+using Blog.Data;
 using Blog.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter;
 
 namespace BlogWebApp.Controllers
 {
@@ -55,10 +59,36 @@ namespace BlogWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Genre")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,GenreString")] Post post)
         {
             if (ModelState.IsValid)
             {
+                var categoryAsString = post.Genre.Split(new[] {',', ' '}).ToArray();
+                var categorys = new List<Category>();
+                foreach (var type in categoryAsString)
+                {
+                    if (!await _context.Categories.AnyAsync(x=>type == null || !String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        var category = new Category() {Type = type};
+                        categorys.Add(category);
+                        _context.Categories.Add(category);
+                    }
+                    else
+                    {
+                        categorys.Add(await _context.Categories.FirstAsync(x=>String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)));
+                    }
+                }
+               var cat=new List<PostCategorys>();
+                foreach (var category1 in categorys)
+                {
+                    cat.Add(new PostCategorys()
+                    {
+                        Post = post,
+                        Category = category1
+                    });
+                }
+
+                post.Categoryses = cat;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -89,7 +119,7 @@ namespace BlogWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Genre")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,GenreString")] Post post)
         {
             if (id != post.Id)
             {
@@ -100,6 +130,38 @@ namespace BlogWebApp.Controllers
             {
                 try
                 {
+                    if (_context.PostCategoryses.Any(x => x.PostId == post.Id))
+                    {
+                        var catt = _context.PostCategoryses.Where(x => x.PostId == post.Id);
+                        _context.PostCategoryses.RemoveRange(catt);
+                    }
+                   
+                    var categoryAsStrings = post.Genre.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    var categorys = new List<Category>();
+                    foreach (var type in categoryAsStrings)
+                    {
+                        if (!await _context.Categories.AnyAsync(x => type == null || x.Type.ToLower() != type.ToLower()))
+                        {
+                            var category = new Category() { Type = type };
+                            categorys.Add(category);
+                            _context.Categories.Add(category);
+                        }
+                        else
+                        {
+                            categorys.Add(await _context.Categories.FirstAsync(x => String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)));
+                        }
+
+                    }
+                    var cat = new List<PostCategorys>();
+                    foreach (var category1 in categorys)
+                    {
+                        cat.Add(new PostCategorys()
+                        {
+                            Post = post,
+                            Category = category1
+                        });
+                    }
+                    post.Categoryses = cat;
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }

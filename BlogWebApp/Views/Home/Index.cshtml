@@ -1,9 +1,9 @@
-﻿@model IEnumerable<Blog.Models.Post>
+﻿@model BlogWebApp.Controllers.PostAndCategoryDto
 
 
 @{
     ViewData["Title"] = "Home Page";
-    var mod = Model;
+    var mod = Model.Posts;
 
 }
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -13,15 +13,19 @@
 <form asp-action="Index">
     <select id="sort" onchange="getComboA(this)">
         <option value="all" selected='@(ViewData["Genre"].ToString() == "all" ? "selected" : null)'>All</option>
-        <option value="IT" selected='@(ViewData["Genre"].ToString() == "IT" ? "selected" : null)'>IT</option>
-        <option value="Movies" selected='@(ViewData["Genre"].ToString() == "Movies" ? "selected" : null)'>Movies</option>
-        <option value="Jokes" selected='@(ViewData["Genre"].ToString() == "Jokes" ? "selected" : null)'>Jokes</option>
-        <option value="Other" selected='@(ViewData["Genre"].ToString() == "Other" ? "selected" : null)'>Other</option>
+        @foreach (var genre in Model.Categories)
+        {
+
+            <option value="@genre" selected='@(ViewData["Genre"].ToString() == genre ? "selected" : null)'>@genre</option>
+
+        }
+       
     </select>
-    @*<input type="submit">*@
+
 </form>
 
 </h4>
+
 
 <div class="container">
     <div class="row">
@@ -68,6 +72,9 @@
         </div>
     </div>
 </div>
+
+
+
 <script>
     function getComboA(selectObject) {
         var value = selectObject.value;

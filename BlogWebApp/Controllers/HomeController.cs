@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BlogWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
+using Blog.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogWebApp.Controllers
@@ -21,23 +23,21 @@ namespace BlogWebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string data)
         {
+            var cat = new PostAndCategoryDto()
+            {
+                Categories = await _context.Categories.Select(x => x.Type).ToArrayAsync(),
+                Posts = await _context.Posts.ToArrayAsync()
+            };
             ViewData["Genre"] = "all";
             if (data != "all" && data != null)
             {
                 ViewData["Genre"] = data;
-                return View(await _context.Posts.Where(x => x.Genre.ToString() == data).ToListAsync());
+                cat.Posts = await _context.Posts.Where(x => x.Categoryses.Select(c => c.Category.Type).Contains(data)).ToListAsync();
+                return View(cat);
             }
-            return View(await _context.Posts.ToListAsync());
+            return View(cat);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> Index(string id)
-        //{
-        //    if (id != "all")
-        //    {
-        //        return View(await _context.Posts.Where(x => x.Genre.ToString() == id).ToListAsync());
-        //    }
-        //    return View(await _context.Posts.ToListAsync());
-        //}
+      
         [Authorize(Roles = "Admin")]
         public IActionResult About()
         {
@@ -63,5 +63,12 @@ namespace BlogWebApp.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+    }
+
+    public class PostAndCategoryDto
+    {
+        public ICollection<Post> Posts { get; set; }
+
+        public ICollection<string> Categories { get; set; }   
     }
 }

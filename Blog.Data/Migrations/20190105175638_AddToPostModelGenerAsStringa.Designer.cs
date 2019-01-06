@@ -4,14 +4,16 @@ using Blog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190105175638_AddToPostModelGenerAsStringa")]
+    partial class AddToPostModelGenerAsStringa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,9 +50,13 @@ namespace Blog.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("PostId");
+
                     b.Property<string>("Type");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Categories");
                 });
@@ -101,31 +107,16 @@ namespace Blog.Data.Migrations
 
                     b.Property<DateTime>("CreatedOn");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Description");
+
+                    b.Property<string>("GenreString")
                         .IsRequired();
 
-                    b.Property<string>("Genre")
-                        .IsRequired();
-
-                    b.Property<string>("Title")
-                        .IsRequired();
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
 
                     b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("Blog.Models.PostCategorys", b =>
-                {
-                    b.Property<int>("CategoryId");
-
-                    b.Property<int>("PostId");
-
-                    b.HasKey("CategoryId", "PostId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostCategoryses");
                 });
 
             modelBuilder.Entity("Blog.Models.User", b =>
@@ -293,6 +284,14 @@ namespace Blog.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Blog.Models.Category", b =>
+                {
+                    b.HasOne("Blog.Models.Post", "Post")
+                        .WithMany("Genre")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Blog.Models.Comment", b =>
                 {
                     b.HasOne("Blog.Models.Post", "Post")
@@ -303,19 +302,6 @@ namespace Blog.Data.Migrations
                     b.HasOne("Blog.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Blog.Models.PostCategorys", b =>
-                {
-                    b.HasOne("Blog.Models.Category", "Category")
-                        .WithMany("PostCategoryses")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Blog.Models.Post", "Post")
-                        .WithMany("Categoryses")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
