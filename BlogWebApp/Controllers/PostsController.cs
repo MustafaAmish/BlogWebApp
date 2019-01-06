@@ -67,15 +67,17 @@ namespace BlogWebApp.Controllers
                 var categorys = new List<Category>();
                 foreach (var type in categoryAsString)
                 {
-                    if (await _context.Categories.AnyAsync(x=>type == null || !String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)))
+                    var genre = await _context.Categories.FirstOrDefaultAsync(x =>
+                        String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase));
+                    if (genre == null)
                     {
-                        var category = new Category() {Type = type};
+                        var category = new Category() { Type = type };
                         categorys.Add(category);
                         _context.Categories.Add(category);
                     }
                     else
                     {
-                        categorys.Add(await _context.Categories.FirstAsync(x=>String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)));
+                        categorys.Add(await _context.Categories.FirstAsync(x => String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)));
                     }
                 }
                var cat=new List<PostCategorys>();
@@ -135,12 +137,14 @@ namespace BlogWebApp.Controllers
                         var catt = _context.PostCategoryses.Where(x => x.PostId == post.Id);
                         _context.PostCategoryses.RemoveRange(catt);
                     }
-                   
+
                     var categoryAsStrings = post.Genre.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     var categorys = new List<Category>();
                     foreach (var type in categoryAsStrings)
                     {
-                        if (!await _context.Categories.AnyAsync(x => type == null || x.Type.ToLower() != type.ToLower()))
+                        var genre = await _context.Categories.FirstOrDefaultAsync(x =>
+                            String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase));
+                        if (genre == null)
                         {
                             var category = new Category() { Type = type };
                             categorys.Add(category);
