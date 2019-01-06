@@ -42,14 +42,13 @@
                             <i class="fa fa-comment"></i> @comment.User.FistName:
                             <small> @comment.CreateOn.ToShortTimeString() on @comment.CreateOn.ToLongDateString()</small>
                         </h5>
-                        <p>@comment.Content</p>
-
-                        if (User.IsInRole("Admin"))
-                        {
-                        
-                            <a class="label label-default"  asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id">Delete</a>
-                       
-                        }
+                        <p>
+                            @comment.Content
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="label label-default" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id">Delete</a>
+                            }
+                        </p>
                     }
 
                     <div class="well">
@@ -68,8 +67,8 @@
 
                         @if (User.IsInRole("Admin"))
                         {
-                            <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                            <a asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                            <a class="label label-default" asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                            <a class="label label-default" asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
                         }
 
                         <button class="label label-default" onclick="window.history.back()">Back</button>
