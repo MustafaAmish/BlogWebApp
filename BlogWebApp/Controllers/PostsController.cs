@@ -63,7 +63,7 @@ namespace BlogWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var categoryAsString = post.Genre.Split(new[] {',', ' '}).ToArray();
+                var categoryAsString = post.Genre.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var categorys = new List<Category>();
                 foreach (var type in categoryAsString)
                 {
