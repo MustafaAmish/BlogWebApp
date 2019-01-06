@@ -59,7 +59,7 @@ namespace BlogWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,GenreString")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Genre")] Post post)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace BlogWebApp.Controllers
                 var categorys = new List<Category>();
                 foreach (var type in categoryAsString)
                 {
-                    if (!await _context.Categories.AnyAsync(x=>type == null || !String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)))
+                    if (await _context.Categories.AnyAsync(x=>type == null || !String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)))
                     {
                         var category = new Category() {Type = type};
                         categorys.Add(category);
