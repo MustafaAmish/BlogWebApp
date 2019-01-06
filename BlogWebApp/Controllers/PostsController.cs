@@ -121,7 +121,7 @@ namespace BlogWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,GenreString")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Genre")] Post post)
         {
             if (id != post.Id)
             {
@@ -134,8 +134,9 @@ namespace BlogWebApp.Controllers
                 {
                     if (_context.PostCategoryses.Any(x => x.PostId == post.Id))
                     {
-                        var catt = _context.PostCategoryses.Where(x => x.PostId == post.Id);
+                        var catt = _context.PostCategoryses.Where(x => x.PostId == post.Id).ToArray();
                         _context.PostCategoryses.RemoveRange(catt);
+                        
                     }
 
                     var categoryAsStrings = post.Genre.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
