@@ -97,7 +97,6 @@ namespace BlogWebApp.Controllers
         }
 
         // GET: Posts/Edit/5
-
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
