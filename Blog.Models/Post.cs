@@ -12,7 +12,7 @@ namespace Blog.Models
 
             this.Comments = new List<Comment>();
             this.CreatedOn = DateTime.UtcNow;
-            this.Categoryses = new List<PostCategorys>();
+            this.Categories = new List<PostCategorys>();
         }
 
         public int Id { get; set; }
@@ -24,7 +24,7 @@ namespace Blog.Models
         public DateTime CreatedOn { get; set; }
 
      
-        public virtual ICollection<PostCategorys> Categoryses { get; set; }
+        public virtual ICollection<PostCategorys> Categories { get; set; }
         [Required]
         public string Genre { get; set; }
 

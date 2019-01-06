@@ -32,7 +32,7 @@ namespace BlogWebApp.Controllers
             if (data != "all" && data != null)
             {
                 ViewData["Genre"] = data;
-                cat.Posts = await _context.Posts.Where(x => x.Categoryses.Select(c => c.Category.Type).Contains(data)).ToListAsync();
+                cat.Posts = await _context.Posts.Where(x => x.Categories.Select(c => c.Category.Type).Contains(data)).ToListAsync();
                 return View(cat);
             }
             return View(cat);

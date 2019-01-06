@@ -17,7 +17,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Categoryses)
+            @Html.DisplayNameFor(model => model.Categories)
         </th>
         <th></th>
     </tr>
@@ -34,7 +34,7 @@
             </td>
             <td>
                 @{
-                    var cat = string.Join(", ", item.Categoryses.Select(x => x.Category.Type));
+                    var cat = string.Join(", ", item.Categories.Select(x => x.Category.Type));
 
                 }
                 @Html.DisplayFor(modelItem => cat)

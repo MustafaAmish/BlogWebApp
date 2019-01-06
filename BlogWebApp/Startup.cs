@@ -100,6 +100,7 @@ namespace BlogWebApp
                     name: "bookRoute",
                     template: "books/{imageName}",
                     defaults: new { controller = "Books", action = "Index" });
+             
             });
         }
     }

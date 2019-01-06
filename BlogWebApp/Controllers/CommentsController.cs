@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Blog.Data;
 using Blog.Models;
 using BlogWebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogWebApp.Controllers
 {
@@ -32,6 +34,7 @@ namespace BlogWebApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int id, string comment)
         {
             if (!User.Identity.IsAuthenticated)
@@ -47,6 +50,24 @@ namespace BlogWebApp.Controllers
             this._context.Comments.Add(mm);
             this._context.SaveChanges();
             return Redirect("/Posts/Details/"+id);
+        }
+       
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var comment =await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+            if (comment!=null)
+            {
+               this._context.Comments.Remove(comment);
+            }
+           
+            this._context.SaveChanges();
+            if (comment != null)
+            {
+                return Redirect("/Posts/Details/" + comment.PostId);
+            }
+
+            return Redirect("/");
         }
     }
 }

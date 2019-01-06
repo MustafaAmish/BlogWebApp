@@ -90,7 +90,7 @@ namespace BlogWebApp.Controllers
                     });
                 }
 
-                post.Categoryses = cat;
+                post.Categories = cat;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -165,7 +165,7 @@ namespace BlogWebApp.Controllers
                             Category = category1
                         });
                     }
-                    post.Categoryses = cat;
+                    post.Categories = cat;
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
