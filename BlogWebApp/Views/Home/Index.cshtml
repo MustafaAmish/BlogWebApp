@@ -3,37 +3,30 @@
 
 @{
     ViewData["Title"] = "Home Page";
-    var mod = Model.Posts;
+    var posts = Model.Posts;
 
 }
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
 
-<h4 align="center">Sort by category 
-<form asp-action="Index">
-    <select id="sort" onchange="getComboA(this)">
-        <option value="all" selected='@(ViewData["Genre"].ToString() == "all" ? "selected" : null)'>All</option>
-        @foreach (var genre in Model.Categories)
-        {
-
-            <option value="@genre" selected='@(ViewData["Genre"].ToString() == genre ? "selected" : null)'>@genre</option>
-
-        }
-       
-    </select>
-
-</form>
-
+<h4 align="center">Filter by category
+    <form asp-action="Index">
+        <select id="sort" onchange="getComboA(this)">
+            <option value="all" selected='@(ViewData["Genre"].ToString() == "all" ? "selected" : null)'>All</option>
+            @foreach (var genre in Model.Categories)
+            {
+                <option value="@genre" selected='@(ViewData["Genre"].ToString() == genre ? "selected" : null)'>@genre</option>
+            }
+        </select>
+    </form>
 </h4>
-
-
 <div class="container">
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-7">
             <div id="postlist">
                 <div class="panel">
-                    @foreach (var post in mod)
+                    @foreach (var post in posts)
                     {
                         <div class="panel-heading">
                             <div class="text-center">
@@ -42,11 +35,11 @@
                                     <div class="col-sm-9">
                                         <h3 class="pull-left">@post.Title</h3>
                                     </div>
-                                    @**<div class="col-sm-3">
-                                        @*<h4 class="pull-right">
-                                            <small><em>@post.CreatedOn.Date.ToShortDateString()<br>18:30:00</em></small>
-                                        </h4>
-                                    </div>*@
+                                   <div class="col-sm-3">
+                                           <h4 class="pull-right">
+                                                <small><em>@post.CreatedOn.ToLongDateString()<br>@post.CreatedOn.ToShortTimeString()</em></small>
+                                            </h4>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -55,17 +48,17 @@
                             @post.Description
                         </div>
                         <div class="panel-footer">
-                            
+
                             <td>
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <a class="label label-default" asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id" >Edit</a>
+                                    <a class="label label-default" asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
                                 }
                                 <a class="label label-default" asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">Details</a>
 
                             </td>
                         </div>
-                        
+
                     }
                 </div>
             </div>
