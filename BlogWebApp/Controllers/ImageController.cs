@@ -33,10 +33,8 @@ namespace BlogWebApp.Controllers
             return View(await img);
         }
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create()
-        {
-            return View();
-        }
+        public async Task<IActionResult> Create() => View();
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Image image, List<IFormFile> Img)

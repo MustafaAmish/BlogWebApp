@@ -28,7 +28,7 @@ namespace BlogWebApp.Controllers
            return View(await _context.Books.ToArrayAsync());
         }
 
-        // GET: Books
+        // GET: Books image
         public ActionResult Index(string imageName)
         {
             var image = _context.Books.FirstOrDefault(i => i.Title == imageName);

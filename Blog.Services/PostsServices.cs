@@ -47,7 +47,8 @@ namespace Blog.Services
                 Categories = post.Categories,
                 Title = post.Title,
                 Description = post.Description,
-                CreatedOn = post.CreatedOn
+                CreatedOn = post.CreatedOn,
+                Comments = post.Comments
             };
             return postModel;
         }
