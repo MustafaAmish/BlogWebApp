@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using BlogWebApp.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
 using Blog.Models;
+using BlogWebApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogWebApp.Models
+namespace BlogWebApp.Controllers
 {
     public class HomeController : Controller
     {

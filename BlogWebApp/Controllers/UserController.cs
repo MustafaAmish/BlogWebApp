@@ -3,7 +3,7 @@ using BlogWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlogWebApp.Controllers
+namespace BlogWebApp.Models
 {
     public class UserController : Controller
     {

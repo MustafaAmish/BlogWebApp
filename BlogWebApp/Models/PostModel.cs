@@ -17,14 +17,17 @@ namespace BlogWebApp.Models
         [MinLength(100, ErrorMessage = "Required minimum 100 symbols")]
         [NotNullOrWhiteSpace]
         public string Description { get; set; }
+
         [Required]
         [MinLength(2, ErrorMessage = "Required minimum 2 symbols")]
         [NotNullOrWhiteSpace]
-        public string Genre { get; set; }
+        public string Genre { get; set; } 
 
         public ICollection<PostCategorys> Categories { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+
+        public List<Comment> Comments { get; set; }
 
     }
 }

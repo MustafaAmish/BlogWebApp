@@ -1,16 +1,15 @@
-﻿using Blog.Data;
-using Blog.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BlogWebApp.Models;
+using Blog.Data;
+using Blog.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogWebApp.Models
+namespace BlogWebApp.Controllers
 {
     public class ImageController : Controller
     {

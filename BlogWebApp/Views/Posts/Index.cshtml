@@ -5,7 +5,7 @@
 }
 
 <h3 align="center">
-    <a class="label label-default"  asp-action="Create">Create New</a>
+    <a class="label label-default" asp-action="Create">Create New</a>
 </h3>
 
 <div class="container">
@@ -21,7 +21,7 @@
                                 <div class="row">
 
                                     <div class="col-sm-9">
-                                        <h3 class="pull-left" >@post.Title</h3>
+                                        <h3 class="pull-left">@post.Title</h3>
                                     </div>
                                     <div class="col-sm-3">
                                         <h4 class="pull-right">
@@ -35,8 +35,16 @@
                         <div class="panel-body " style=" word-wrap: break-word">
                             @post.Description
                         </div>
-                        <div class="panel-footer">
 
+                        <div class="col-sm-5" align="left">
+                            <h4>
+                                @{
+                                    var cat = string.Join(", ", post.Categories.Select(x => x.Category.Type));
+                                }
+                                <small>Categories: @cat</small>
+                            </h4>
+                        </div>
+                        <div class="panel-footer" align="right">
                             <td>
                                 @if (User.IsInRole("Admin"))
                                 {

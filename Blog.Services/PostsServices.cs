@@ -52,9 +52,33 @@ namespace Blog.Services
             return postModel;
         }
 
+        public async Task<bool> Delete(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+            _context.Posts.Remove(post);
+
+
+            return !await _context.Posts.AnyAsync(x=>x.Id== id);
+        }
+
+        public async Task<Post> Details(int? id)
+        {
+            var post = await _context.Posts
+                .FirstOrDefaultAsync(m => m.Id == id);
+            return post;
+        }
+
+        
+
         public async Task<Post> CreateOrEdit(Post post)
         {
-
+            var newPost = new Post()
+            {
+                Genre = post.Genre,
+                Comments = post.Comments,
+                Description = post.Description,
+                Title = post.Title
+            };
 
             var categoryAsStrings = post.Genre.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var categorys = new List<Category>();

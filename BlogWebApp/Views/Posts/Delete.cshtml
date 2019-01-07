@@ -1,9 +1,10 @@
-﻿@model Blog.Models.Post
+﻿@model PostModel
 
 @{
     ViewData["Title"] = "Delete";
-}
 
+    var cat = string.Join(", ", Model.Categories.Select(x => x.Category.Type));
+}
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Post</h4>
@@ -19,19 +20,21 @@
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            <div class="panel-body " style=" word-wrap: break-word">
+                @Model.Description
+            </div>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Categories)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Categories)
+            @Html.DisplayFor(model => cat)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a  class="btn btn-default" asp-action="Index">Back to List</a>
+        <a class="btn btn-default" asp-action="Index">Back to List</a>
     </form>
 </div>

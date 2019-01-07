@@ -1,4 +1,9 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Blog.Data;
 using Blog.Models;
 using Blog.Services.Contract;
@@ -6,11 +11,8 @@ using BlogWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace BlogWebApp.Models
+namespace BlogWebApp.Controllers
 {
 
     public class PostsController : Controller
@@ -41,14 +43,13 @@ namespace BlogWebApp.Models
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _postSevices.PostById(id);
             if (post == null)
             {
                 return NotFound();
             }
-
-            return View(post);
+            var newPost = _mapper.Map<PostModel>(post);
+            return View(newPost);
         }
 
         [Authorize(Roles = "Admin")]
@@ -74,7 +75,8 @@ namespace BlogWebApp.Models
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(post);
+            var newPost = _mapper.Map<PostModel>(post);
+            return View(newPost);
         }
 
         // GET: Posts/Edit/5
@@ -131,7 +133,9 @@ namespace BlogWebApp.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(post);
+
+            var newPost = _mapper.Map<PostModel>(post);
+            return View(newPost);
         }
 
         [Authorize(Roles = "Admin")]
@@ -142,14 +146,14 @@ namespace BlogWebApp.Models
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _postSevices.PostById(id);
             if (post == null)
             {
                 return NotFound();
             }
 
-            return View(post);
+            var curentPost = _mapper.Map<PostModel>(post);
+            return View(curentPost);
         }
 
         // POST: Posts/Delete/5
@@ -158,10 +162,12 @@ namespace BlogWebApp.Models
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var post = await _postSevices.Delete(id);
+            if (post)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            throw new InvalidDataException("Poster with given ID not found");
         }
 
         private bool PostExists(int id)

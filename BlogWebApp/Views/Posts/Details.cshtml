@@ -1,5 +1,5 @@
 ﻿
-@model Blog.Models.Post
+@model PostModel
 
 @{
     ViewData["Title"] = "Details";
@@ -33,7 +33,7 @@
                         </div>
                     </div>
 
-                    <div class="panel-body">
+                    <div class="panel-body" style=" word-wrap: break-word">
                         @Model.Description
                     </div>
                     @foreach (var comment in Model.Comments)
