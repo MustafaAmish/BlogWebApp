@@ -7,50 +7,53 @@
 <h3 align="center">
     <a class="label label-default"  asp-action="Create">Create New</a>
 </h3>
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Categories)
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @{
-                    var cat = string.Join(", ", item.Categories.Select(x => x.Category.Type));
 
-                }
-                @Html.DisplayFor(modelItem => cat)
-            </td>
-            <td>
-                @if (User.IsInRole("Admin"))
-                {
-                    <a class="label label-default" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a class="label label-default" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                }
-                <a class="label label-default" asp-action="Details" asp-route-id="@item.Id">Details</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-7">
+            <div id="postlist">
+                <div class="panel">
+                    @foreach (var post in Model)
+                    {
+                        <div class="panel-heading">
+                            <div class="text-center">
+                                <div class="row">
+
+                                    <div class="col-sm-9">
+                                        <h3 class="pull-left" >@post.Title</h3>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h4 class="pull-right">
+                                            <small><em>@post.CreatedOn.ToLongDateString()<br>@post.CreatedOn.ToShortTimeString()</em></small>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body " style=" word-wrap: break-word">
+                            @post.Description
+                        </div>
+                        <div class="panel-footer">
+
+                            <td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="label label-default" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
+                                    <a class="label label-default" asp-action="Delete" asp-route-id="@post.Id">Delete</a>
+                                }
+                                <a class="label label-default" asp-action="Details" asp-route-id="@post.Id">Details</a>
+                            </td>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <button class="label label-default" onclick="window.history.back()">Back</button>
 
 

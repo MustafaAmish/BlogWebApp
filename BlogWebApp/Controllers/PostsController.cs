@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using Blog.Data;
 using Blog.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using AutoMapper;
+using Blog.Services.Contract;
+using BlogWebApp.Models;
 using Castle.Components.DictionaryAdapter;
+using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators.Internal;
+using Microsoft.Extensions.Primitives;
 
 namespace BlogWebApp.Controllers
 {
@@ -16,10 +22,14 @@ namespace BlogWebApp.Controllers
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IPostSevices _postSevices;
 
-        public PostsController(ApplicationDbContext context)
+        public PostsController(ApplicationDbContext context, IMapper mapper,IPostSevices postSevices)
         {
             _context = context;
+            _mapper = mapper;
+            _postSevices = postSevices;
         }
 
         [Authorize(Roles = "Admin")]
@@ -59,38 +69,13 @@ namespace BlogWebApp.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Genre")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Genre")] PostModel postModel)
         {
+            var post = _mapper.Map<Post>(postModel);
             if (ModelState.IsValid)
             {
-                var categoryAsString = post.Genre.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var categorys = new List<Category>();
-                foreach (var type in categoryAsString)
-                {
-                    var genre = await _context.Categories.FirstOrDefaultAsync(x =>
-                        String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase));
-                    if (genre == null)
-                    {
-                        var category = new Category() { Type = type };
-                        categorys.Add(category);
-                        _context.Categories.Add(category);
-                    }
-                    else
-                    {
-                        categorys.Add(await _context.Categories.FirstAsync(x => String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)));
-                    }
-                }
-               var cat=new List<PostCategorys>();
-                foreach (var category1 in categorys)
-                {
-                    cat.Add(new PostCategorys()
-                    {
-                        Post = post,
-                        Category = category1
-                    });
-                }
-
-                post.Categories = cat;
+              
+                post =await _postSevices.CreateOrEdit(post);
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -107,12 +92,14 @@ namespace BlogWebApp.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _postSevices.PostById(id);
             if (post == null)
             {
                 return NotFound();
             }
-            return View(post);
+
+            var postModel = _mapper.Map<PostModel>(post);
+            return View(postModel);
         }
 
         // POST: Posts/Edit/5
@@ -121,8 +108,9 @@ namespace BlogWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Genre")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Genre")] PostModel postModel)
         {
+            var post = _mapper.Map<Post>(postModel);
             if (id != post.Id)
             {
                 return NotFound();
@@ -132,41 +120,7 @@ namespace BlogWebApp.Controllers
             {
                 try
                 {
-                    if (_context.PostCategoryses.Any(x => x.PostId == post.Id))
-                    {
-                        var catt = _context.PostCategoryses.Where(x => x.PostId == post.Id).ToArray();
-                        _context.PostCategoryses.RemoveRange(catt);
-                        
-                    }
-
-                    var categoryAsStrings = post.Genre.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    var categorys = new List<Category>();
-                    foreach (var type in categoryAsStrings)
-                    {
-                        var genre = await _context.Categories.FirstOrDefaultAsync(x =>
-                            String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase));
-                        if (genre == null)
-                        {
-                            var category = new Category() { Type = type };
-                            categorys.Add(category);
-                            _context.Categories.Add(category);
-                        }
-                        else
-                        {
-                            categorys.Add(await _context.Categories.FirstAsync(x => String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)));
-                        }
-
-                    }
-                    var cat = new List<PostCategorys>();
-                    foreach (var category1 in categorys)
-                    {
-                        cat.Add(new PostCategorys()
-                        {
-                            Post = post,
-                            Category = category1
-                        });
-                    }
-                    post.Categories = cat;
+                    post = await _postSevices.CreateOrEdit(id,post);
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
@@ -178,7 +132,7 @@ namespace BlogWebApp.Controllers
                     }
                     else
                     {
-                        throw;
+                        throw new DataException("aaaaaaa");
                     }
                 }
                 return RedirectToAction(nameof(Index));

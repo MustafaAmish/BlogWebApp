@@ -1,7 +1,9 @@
-﻿using Blog.Data;
+﻿using AutoMapper;
+using Blog.Data;
 using Blog.Models;
 using Blog.Services;
 using Blog.Services.Contract;
+using BlogWebApp.AutoMapper;
 using BlogWebApp.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -63,6 +65,16 @@ namespace BlogWebApp
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IPostSevices, PostsServices>();
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

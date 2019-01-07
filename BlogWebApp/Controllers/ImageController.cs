@@ -53,7 +53,7 @@ namespace BlogWebApp.Controllers
                     }
                 }
             }
-
+            
             _context.Images.Add(image);
             _context.SaveChanges();
             return RedirectToAction("Gallery");
