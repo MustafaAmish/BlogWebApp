@@ -28,7 +28,7 @@ namespace Blog.Services
 
             }
 
-            var curentPost =await CreateOrEdit(post);
+            var curentPost = await CreateOrEdit(post);
             return curentPost;
 
         }
@@ -40,7 +40,7 @@ namespace Blog.Services
             {
                 return null;
             }
-            var postModel =new Post()
+            var postModel = new Post()
             {
                 Id = post.Id,
                 Genre = post.Genre,
@@ -54,7 +54,7 @@ namespace Blog.Services
 
         public async Task<Post> CreateOrEdit(Post post)
         {
-           
+
 
             var categoryAsStrings = post.Genre.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var categorys = new List<Category>();

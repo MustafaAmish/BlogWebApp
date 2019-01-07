@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogWebApp.Controllers
+namespace BlogWebApp.Models
 {
     public class CommentsController : Controller
     {

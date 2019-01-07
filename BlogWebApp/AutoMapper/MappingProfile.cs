@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Blog.Models;
-using BlogWebApp.Controllers;
 using BlogWebApp.Models;
 
 namespace BlogWebApp.AutoMapper

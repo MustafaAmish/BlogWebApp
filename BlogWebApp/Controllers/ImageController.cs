@@ -10,7 +10,7 @@ using BlogWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogWebApp.Controllers
+namespace BlogWebApp.Models
 {
     public class ImageController : Controller
     {

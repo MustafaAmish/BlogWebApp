@@ -1,31 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using AutoMapper;
 using Blog.Data;
 using Blog.Models;
+using Blog.Services.Contract;
+using BlogWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using AutoMapper;
-using Blog.Services.Contract;
-using BlogWebApp.Models;
-using Castle.Components.DictionaryAdapter;
-using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators.Internal;
-using Microsoft.Extensions.Primitives;
 
-namespace BlogWebApp.Controllers
+namespace BlogWebApp.Models
 {
-    
+
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IPostSevices _postSevices;
 
-        public PostsController(ApplicationDbContext context, IMapper mapper,IPostSevices postSevices)
+        public PostsController(ApplicationDbContext context, IMapper mapper, IPostSevices postSevices)
         {
             _context = context;
             _mapper = mapper;
@@ -39,7 +33,7 @@ namespace BlogWebApp.Controllers
         }
 
         // GET: Posts/Details/5
-        
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -74,8 +68,8 @@ namespace BlogWebApp.Controllers
             var post = _mapper.Map<Post>(postModel);
             if (ModelState.IsValid)
             {
-              
-                post =await _postSevices.CreateOrEdit(post);
+
+                post = await _postSevices.CreateOrEdit(post);
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -120,7 +114,7 @@ namespace BlogWebApp.Controllers
             {
                 try
                 {
-                    post = await _postSevices.CreateOrEdit(id,post);
+                    post = await _postSevices.CreateOrEdit(id, post);
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }

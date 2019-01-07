@@ -10,7 +10,7 @@ using Blog.Data;
 using Blog.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogWebApp.Controllers
+namespace BlogWebApp.Models
 {
     public class HomeController : Controller
     {
