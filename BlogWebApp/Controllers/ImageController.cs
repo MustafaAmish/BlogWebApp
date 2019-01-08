@@ -16,8 +16,8 @@ namespace BlogWebApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly Image[] _image;    
-        private readonly IImageServices imageServices;
-        public ImageController(ApplicationDbContext context, IImageServices imgServices)
+        private readonly IImageServicesaaaaaaaaaa imageServices;
+        public ImageController(ApplicationDbContext context, IImageServicesaaaaaaaaaa imgServices)
         {
             _context = context;
             _image = context.Images.ToArray();

@@ -34,7 +34,12 @@ namespace BlogWebApp.Controllers
             }
             return View(cat);
         }
-      
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
         
 
         public IActionResult Contact()

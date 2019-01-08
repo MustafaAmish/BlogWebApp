@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Services
 {
-    public class ImageServices : BlogPostDb, IImageServices
+    public class ImageServices : BlogPostDb, IImageServicesaaaaaaaaaa
     {
         public ImageServices(ApplicationDbContext dbContext)
             : base(dbContext)
