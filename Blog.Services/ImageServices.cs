@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using Blog.Data;
+﻿using Blog.Data;
+using Blog.Models;
 using Blog.Services.Contract;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Blog.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace Blog.Services
 {
@@ -61,13 +63,13 @@ namespace Blog.Services
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public  void ImageDelete(int id, IFormCollection collection)
+        public void ImageDelete(int id, IFormCollection collection)
         {
-            var images =  DbContext.Images.Find(id);
+            var images = DbContext.Images.Find(id);
             DbContext.Images.Remove(images);
-             DbContext.SaveChangesAsync();
+            DbContext.SaveChangesAsync();
         }
 
-       
+
     }
 }
