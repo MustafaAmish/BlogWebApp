@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
+using Blog.Services.Contract;
 using BlogWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,26 +12,25 @@ namespace BlogWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IHomeServices _homeServices;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(IHomeServices homeServices)
         {
-            _context = context;
+            _homeServices = homeServices;
         }
         [HttpGet]
-        public async Task<IActionResult> Index(string data)
+        public async Task<IActionResult> Index(string data="all")
         {
             var cat = new PostAndCategoryDto()
             {
-                Categories = await _context.Categories.Select(x => x.Type).ToArrayAsync(),
-                Posts = await _context.Posts.ToArrayAsync()
+                Categories = await _homeServices.GetCategories(),
+                Posts = await _homeServices.FilterByCategory(data)
             };
             ViewData["Genre"] = "all";
             if (data != "all" && data != null)
             {
                 ViewData["Genre"] = data;
-                cat.Posts = await _context.Posts.Where(x => x.Categories.Select(c => c.Category.Type).Contains(data)).ToListAsync();
-                return View(cat);
+               return View(cat);
             }
             return View(cat);
         }
@@ -45,7 +45,6 @@ namespace BlogWebApp.Controllers
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
