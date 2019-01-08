@@ -1,29 +1,24 @@
-﻿using System;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Blog.Data;
+﻿using AutoMapper;
 using Blog.Models;
 using Blog.Services.Contract;
 using BlogWebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace BlogWebApp.Controllers
 {
 
     public class PostsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IPostSevices _postSevices;
 
-        public PostsController(ApplicationDbContext context, IMapper mapper, IPostSevices postSevices)
+        public PostsController(IMapper mapper, IPostSevices postSevices)
         {
-            _context = context;
+
             _mapper = mapper;
             _postSevices = postSevices;
         }
@@ -31,7 +26,7 @@ namespace BlogWebApp.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Posts.ToListAsync());
+            return View(await _postSevices.AllPosts());
         }
 
         // GET: Posts/Details/5
@@ -69,10 +64,8 @@ namespace BlogWebApp.Controllers
             var post = _mapper.Map<Post>(postModel);
             if (ModelState.IsValid)
             {
+                await _postSevices.CreateOrEdit(post);
 
-                post = await _postSevices.CreateOrEdit(post);
-                _context.Add(post);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             var newPost = _mapper.Map<PostModel>(post);
@@ -116,9 +109,7 @@ namespace BlogWebApp.Controllers
             {
                 try
                 {
-                    post = await _postSevices.CreateOrEdit(id, post);
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
+                    await _postSevices.CreateOrEdit(id, post);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -128,7 +119,7 @@ namespace BlogWebApp.Controllers
                     }
                     else
                     {
-                        throw new DataException("aaaaaaa");
+                        throw;
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -172,7 +163,9 @@ namespace BlogWebApp.Controllers
 
         private bool PostExists(int id)
         {
-            return _context.Posts.Any(e => e.Id == id);
+            var exist = _postSevices.PostById(id) != null;
+
+            return exist;
         }
     }
 }

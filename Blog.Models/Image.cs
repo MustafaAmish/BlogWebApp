@@ -9,5 +9,6 @@
         public string Description { get; set; }
 
         public byte[] Img { get; set; }
+        //TODO requared to all
     }
 }

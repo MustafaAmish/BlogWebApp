@@ -9,37 +9,36 @@ using System.Threading.Tasks;
 
 namespace Blog.Services
 {
-    public class PostsServices : IPostSevices
+    public class PostsServices : BlogPostDb, IPostSevices
 
     {
-        private readonly ApplicationDbContext _context;
-
-        public PostsServices(ApplicationDbContext context)
+        public PostsServices(ApplicationDbContext dbContext)
+            : base(dbContext)
         {
-            _context = context;
         }
 
         public async Task<Post> CreateOrEdit(int id, Post post)
         {
-            if (_context.PostCategoryses.Any(x => x.PostId == post.Id))
+            if (DbContext.PostCategoryses.Any(x => x.PostId == post.Id))
             {
-                var catt = _context.PostCategoryses.Where(x => x.PostId == post.Id).ToArray();
-                _context.PostCategoryses.RemoveRange(catt);
-
+                var catt = DbContext.PostCategoryses.Where(x => x.PostId == post.Id).ToArray();
+                DbContext.PostCategoryses.RemoveRange(catt);
+                await DbContext.SaveChangesAsync();
             }
 
             var curentPost = await CreateOrEdit(post);
             return curentPost;
-
         }
 
         public async Task<Post> PostById(int? id)
         {
-            var post = await _context.Posts.FindAsync(id);
+            var post = await DbContext.Posts.FindAsync(id);
+
             if (post == null)
             {
                 return null;
             }
+
             var postModel = new Post()
             {
                 Id = post.Id,
@@ -50,55 +49,48 @@ namespace Blog.Services
                 CreatedOn = post.CreatedOn,
                 Comments = post.Comments
             };
+
             return postModel;
         }
 
         public async Task<bool> Delete(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            _context.Posts.Remove(post);
-
-
-            return !await _context.Posts.AnyAsync(x=>x.Id== id);
+            var post = await DbContext.Posts.FirstOrDefaultAsync(x => x.Id == id);
+            if (post != null)
+            {
+                DbContext.Posts.Remove(post);
+                await DbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
-        public async Task<Post> Details(int? id)
+        public async Task<ICollection<Post>> AllPosts()
         {
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.Id == id);
-            return post;
+            return await DbContext.Posts.ToListAsync();
         }
-
         
-
         public async Task<Post> CreateOrEdit(Post post)
         {
-            var newPost = new Post()
-            {
-                Genre = post.Genre,
-                Comments = post.Comments,
-                Description = post.Description,
-                Title = post.Title
-            };
+            var isNewPost = post.Id == 0;
 
             var categoryAsStrings = post.Genre.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var categorys = new List<Category>();
             foreach (var type in categoryAsStrings)
             {
-                var genre = await _context.Categories.FirstOrDefaultAsync(x =>
+                var genre = await DbContext.Categories.FirstOrDefaultAsync(x =>
                     String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase));
                 if (genre == null)
                 {
                     var category = new Category() { Type = type };
                     categorys.Add(category);
-                    _context.Categories.Add(category);
+                    DbContext.Categories.Add(category);
                 }
                 else
                 {
-                    categorys.Add(await _context.Categories.FirstAsync(x =>
+                    categorys.Add(await DbContext.Categories.FirstAsync(x =>
                         String.Equals(x.Type, type, StringComparison.CurrentCultureIgnoreCase)));
                 }
-
             }
 
             var cat = new List<PostCategorys>();
@@ -112,6 +104,15 @@ namespace Blog.Services
             }
 
             post.Categories = cat;
+            if (isNewPost)
+            {
+                DbContext.Posts.Add(post);
+            }
+            else
+            {
+                DbContext.Posts.Update(post);
+            }
+            await DbContext.SaveChangesAsync();
             return post;
         }
     }

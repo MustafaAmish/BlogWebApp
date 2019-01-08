@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
 using Blog.Models;
+using Blog.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,75 +15,53 @@ namespace BlogWebApp.Controllers
     public class ImageController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly Image[] _image;
-        public ImageController(ApplicationDbContext context)
+        private readonly Image[] _image;    
+        private readonly IImageServices imageServices;
+        public ImageController(ApplicationDbContext context, IImageServices imgServices)
         {
             _context = context;
             _image = context.Images.ToArray();
+            this.imageServices = imgServices;
         }
 
         public async Task<IActionResult> Gallery()
         {
             
-            return View(await _context.Images.ToArrayAsync());
+            return View(await imageServices.AllImages());
         }
 
         public async Task<IActionResult> Details(int id )
         {
-            var img = _context.Images.FirstOrDefaultAsync(x => x.Id == id);
-            return View(await img);
+            var img =await imageServices.ImageById(id);
+            return View( img);
         }
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create() => View();
+        public  IActionResult Create() => View();
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create(Image image, List<IFormFile> Img)
+        public IActionResult Create(Image image, List<IFormFile> Img)
         {
-            foreach (var imgFile in Img)
-            {
-                if (imgFile.Length > 0)
-                {
-                    using (var stream = new MemoryStream())
-                    {
-                        await imgFile.CopyToAsync(stream);
-                        image.Img = stream.ToArray();
-                    }
-                }
-            }
-            
-            _context.Images.Add(image);
-            _context.SaveChanges();
+            imageServices.Create(image,Img);
             return RedirectToAction("Gallery");
         }
 
         public ActionResult Index(string imageName)
         {
-            var image = _context.Images.FirstOrDefault(i => i.Name == imageName);
-            if (image != null)
-            {
-
-                MemoryStream memoryStream = new MemoryStream(image.Img);
-                FileStreamResult result = new FileStreamResult(memoryStream, "image/jpg");
-                result.FileDownloadName = imageName;
-                return result;
-            }
-
-            return null;
+            return imageServices.ImageByName(imageName);
         }
 
       
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var images = await _context.Images
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (_image == null)
+            var images = await imageServices.ImageById(id);
+            if (images == null)
             {
                 return NotFound();
             }
@@ -94,11 +73,9 @@ namespace BlogWebApp.Controllers
         [HttpPost]
      
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
-            var images = await _context.Images.FindAsync(id);
-            _context.Images.Remove(images);
-            await _context.SaveChangesAsync();
+            imageServices.ImageDelete(id,collection);
             return RedirectToAction(nameof(Gallery));
         }
     }

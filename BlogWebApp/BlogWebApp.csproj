@@ -14,8 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blog.Data\Blog.Data.csproj" />
-    <ProjectReference Include="..\Blog.Models\Blog.Models.csproj" />
     <ProjectReference Include="..\Blog.Services\Blog.Services.csproj" />
   </ItemGroup>
 

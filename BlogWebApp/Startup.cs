@@ -38,18 +38,18 @@ namespace BlogWebApp
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseLazyLoadingProxies();
-            options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(
+                        Configuration.GetConnectionString("DefaultConnection"));
             });
             services.Configure<IdentityOptions>(options => { options.SignIn.RequireConfirmedEmail = false; });
 
             services.AddIdentity<User, IdentityRole>(options =>
             {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 1;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1;
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -66,6 +66,8 @@ namespace BlogWebApp
 
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IPostSevices, PostsServices>();
+            services.AddTransient<IImageServices, ImageServices>();
+
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -99,7 +101,7 @@ namespace BlogWebApp
             app.UseAuthentication();
 
             app.UseMvc(routes =>
-            { 
+            {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
@@ -107,12 +109,12 @@ namespace BlogWebApp
                 routes.MapRoute(
                     name: "imgRoute",
                     template: "image/{imageName}",
-                    defaults: new {controller = "Image", action = "Index"});
+                    defaults: new {controller = "Image", action = "Index" });
                 routes.MapRoute(
                     name: "bookRoute",
                     template: "books/{imageName}",
-                    defaults: new { controller = "Books", action = "Index" });
-             
+                    defaults: new {controller = "Books", action = "Index" });
+
             });
         }
     }
