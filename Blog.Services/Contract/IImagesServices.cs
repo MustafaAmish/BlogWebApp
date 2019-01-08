@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 namespace Blog.Services.Contract
 {
-    public interface IImageServicesaaaaaaaaaa
+    public interface IImagesServices
     {
         FileStreamResult ImageByName(string imageName);
         void Create(Image image, List<IFormFile> img);
