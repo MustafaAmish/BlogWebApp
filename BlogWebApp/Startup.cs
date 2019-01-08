@@ -68,6 +68,7 @@ namespace BlogWebApp
             services.AddScoped<IPostSevices, PostsServices>();
             services.AddScoped<IImagesServices, ImageServices>();
             services.AddScoped<IHomeServices, HomeServices>();
+            services.AddScoped<ICommentServices, CommentServices>();
 
             var mappingConfig = new MapperConfiguration(mc =>
             {

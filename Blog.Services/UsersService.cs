@@ -47,7 +47,7 @@ namespace Blog.Services
             {
                 return false;
             }
-
+            
             var user = new User
             {
                 Email = email,

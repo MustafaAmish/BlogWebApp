@@ -1,27 +1,26 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Blog.Data;
-using Blog.Models;
+﻿using Blog.Models;
+using Blog.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace BlogWebApp.Controllers
 {
     public class CommentsController : Controller
     {
 
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<User> userManager;
 
-        public CommentsController(ApplicationDbContext context, UserManager<User> userManagerr)
+        private readonly UserManager<User> userManager;
+        private readonly ICommentServices _commentServices;
+
+        public CommentsController(UserManager<User> userManagerr, ICommentServices commentServices)
         {
-            _context = context;
             userManager = userManagerr;
+            this._commentServices = commentServices;
         }
 
-        public IActionResult Create()   
+        public IActionResult Create()
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -38,30 +37,22 @@ namespace BlogWebApp.Controllers
             {
                 return RedirectToAction("Login", "User");
             }
-            var mm = new Comment()
-            {
-                Content = comment,
-                User =await this.userManager.FindByNameAsync(this.User.Identity.Name),
-                Post = this._context.Posts.First(x=>x.Id==id)
-            };
-            this._context.Comments.Add(mm);
-            this._context.SaveChanges();
-            return Redirect("/Posts/Details/"+id);
+
+            var user = await this.userManager.FindByNameAsync(this.User.Identity.Name);
+
+            _commentServices.Create(id, comment, user);
+
+            return Redirect("/Posts/Details/" + id);
         }
-       
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var comment =await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
-            if (comment!=null)
-            {
-               this._context.Comments.Remove(comment);
-            }
-           
-            this._context.SaveChanges();
+            var comment = await _commentServices.FindById(id);
+
             if (comment != null)
             {
-                return Redirect("/Posts/Details/" + comment.PostId);
+                return Redirect("/Posts/Details/" + comment);
             }
 
             return Redirect("/");

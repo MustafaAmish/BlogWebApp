@@ -7,7 +7,7 @@
 
 }
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
 
 <h4 align="center">Filter by category
     <form asp-action="Index">
@@ -46,6 +46,14 @@
 
                         <div class="panel-body " style=" word-wrap: break-word">
                             @post.Description
+                        </div>
+                        <div class="col-sm-5" align="left">
+                            <h4>
+                                @{
+                                    var cat = string.Join(", ", post.Categories.Select(x => x.Category.Type));
+                                }
+                                <small>Categories: @cat</small>
+                            </h4>
                         </div>
                         <div class="panel-footer" align="right">
 
