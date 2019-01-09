@@ -1,59 +1,43 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Blog.Data;
-using Blog.Models;
+﻿using Blog.Models;
+using Blog.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BlogWebApp.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IBookServices _bookServices;
 
-        
-
-        public BooksController(ApplicationDbContext context)
+        public BooksController(IBookServices bookServices)
         {
-            _context = context;
-            
+            this._bookServices = bookServices;
         }
 
         public async Task<ActionResult> Gallery()
         {
-           return View(await _context.Books.ToArrayAsync());
+            return View(await _bookServices.AllBooks());
         }
 
         // GET: Books image
         public ActionResult Index(string imageName)
         {
-            var image = _context.Books.FirstOrDefault(i => i.Title == imageName);
-            if (image != null)
-            {
-
-                MemoryStream memoryStream = new MemoryStream(image.Image);
-                FileStreamResult result = new FileStreamResult(memoryStream, "image/jpg");
-                result.FileDownloadName = imageName;
-                return result;
-            }
-
-            return null;
+            return _bookServices.BookImage(imageName);
         }
 
         // GET: Books/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var book = _context.Books.FirstOrDefaultAsync(x => x.Id == id);
-            return View(await book);
+
+            return View(await _bookServices.BookById(id));
         }
 
-       
+
         [Authorize(Roles = "Admin")]
-       public ActionResult Create()
+        public ActionResult Create()
         {
             return View();
         }
@@ -62,28 +46,15 @@ namespace BlogWebApp.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create( Book book, List<IFormFile> Image)
-            
-        {
-            foreach (var imgFile in Image)
-            {
-                if (imgFile.Length > 0)
-                {
-                    using (var stream = new MemoryStream())
-                    {
-                        await imgFile.CopyToAsync(stream);
-                        book.Image = stream.ToArray();
-                    }
-                }
-            }
+        public ActionResult Create(Book book, List<IFormFile> image)
 
-            _context.Books.Add(book);
-            _context.SaveChanges();
+        {
+            _bookServices.CreatBook(book, image);
             return RedirectToAction("Gallery");
         }
 
         // GET: Books/Delete/5
-       
+
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -92,8 +63,7 @@ namespace BlogWebApp.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _bookServices.BookById(id);
             if (post == null)
             {
                 return NotFound();
@@ -104,13 +74,10 @@ namespace BlogWebApp.Controllers
 
         // POST: Books/Delete/5
         [HttpPost]
-    
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
-            var book = await _context.Books.FindAsync(id);
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
+            _bookServices.Delete(id, collection);
             return RedirectToAction(nameof(Gallery));
         }
     }

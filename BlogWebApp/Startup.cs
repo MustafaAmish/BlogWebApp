@@ -69,6 +69,7 @@ namespace BlogWebApp
             services.AddScoped<IImagesServices, ImageServices>();
             services.AddScoped<IHomeServices, HomeServices>();
             services.AddScoped<ICommentServices, CommentServices>();
+            services.AddScoped<IBookServices, BookServices>();
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
