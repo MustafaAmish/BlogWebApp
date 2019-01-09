@@ -4,8 +4,10 @@ using Blog.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 
 namespace Blog.Services
 {
@@ -21,12 +23,14 @@ namespace Blog.Services
         {
             if (DbContext.PostCategoryses.Any(x => x.PostId == post.Id))
             {
+
                 var catt = DbContext.PostCategoryses.Where(x => x.PostId == post.Id).ToArray();
                 DbContext.PostCategoryses.RemoveRange(catt);
-                await DbContext.SaveChangesAsync();
+                 DbContext.SaveChanges();
             }
 
             var curentPost = await CreateOrEdit(post);
+           
             return curentPost;
         }
 
@@ -73,6 +77,11 @@ namespace Blog.Services
         public async Task<Post> CreateOrEdit(Post post)
         {
             var isNewPost = post.Id == 0;
+            if (post.Genre.IsNullOrEmpty()
+                || post.Title.IsNullOrEmpty() || post.Description.IsNullOrEmpty())
+            {
+                throw new InvalidDataException("no empty fields allowed ");
+            }
 
             var categoryAsStrings = post.Genre.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var categorys = new List<Category>();
@@ -106,7 +115,7 @@ namespace Blog.Services
             post.Categories = cat;
             if (isNewPost)
             {
-                DbContext.Posts.Add(post);
+               await DbContext.Posts.AddAsync(post);
             }
             else
             {

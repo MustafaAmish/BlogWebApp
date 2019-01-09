@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace Blog.Models
 {
@@ -16,9 +17,12 @@ namespace Blog.Models
         }
 
         public int Id { get; set; }
+
         [Required]
+        [StringLength(20, MinimumLength = 2)]
         public string Title { get; set; }
         [Required]
+        [MinLength(10, ErrorMessage = "Required minimum 10 symbols")]
         public string Description { get; set; }
 
         public DateTime CreatedOn { get; set; }
