@@ -31,7 +31,7 @@ namespace XUnitTestProject
             var result = count.AllPosts();
             Assert.NotEqual(1, result.Result.Count);
             Assert.Equal(2, result.Result.Count);
-
+            
         }
         //Testing Post create 
         [Fact]
@@ -50,7 +50,7 @@ namespace XUnitTestProject
             //Add post with valid data
             var result = await context.CreateOrEdit(post1);
             Assert.Equal(post1, result);
-            Assert.Equal(1,post1.Id);
+            Assert.Equal(5,post1.Id);
 
             Task<InvalidDataException> exception= Assert.ThrowsAsync<InvalidDataException>(async ()=>await context.CreateOrEdit(post2));
             Assert.Equal("no empty fields allowed ",exception.Result.Message);

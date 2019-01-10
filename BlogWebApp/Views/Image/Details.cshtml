@@ -5,37 +5,42 @@
 }
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
-<div>
-   
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Img)
-        </dt>
-        <dd>
-            <img class="img-thumbnail" src="/Image/@Model.Name"  />
-        </dd>
-    </dl>
-</div>
-<div>
-    @*<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |*@
-    @if (User.IsInRole("Admin"))
-    {
-        
-        <a asp-action="Delete" asp-route-id="@Model.Id" >Delete</a>
-    }
-  
-    <button class="label label-default" onclick="window.history.back()">Back to List</button>
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
+            <div id="postlist">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="text-center">
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <h3 class="pull-left">@Model.Name</h3>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <a href="#" class="thumbnail">
+                                    <img class="img-thumbnail" src="/Image/@Model.Name"  />
+                                </a>
+
+                                <div class="panel-body " style=" word-wrap: break-word">
+                                    @Model.Description
+                                </div>
+                            </div>
+
+                            <div class="panel-footer">
+                                
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@Model.Id" class="label label-default">Delete </a>
+                                }
+                                <button class="label label-default" onclick="window.history.back()">Back to List</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
