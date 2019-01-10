@@ -36,7 +36,15 @@ namespace BlogWebApp.Controllers
             return this.RedirectToAction(nameof(Login));
         }
 
-        public IActionResult Login() => this.View();
+        public IActionResult Login()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+          return  this.View();
+        } 
 
         [ValidateAntiForgeryToken]
         [HttpPost]
